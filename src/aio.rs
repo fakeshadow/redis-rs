@@ -12,7 +12,13 @@ use tokio::io::{AsyncBufRead, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader};
 use tokio::net::tcp::TcpStream;
 use tokio::sync::{mpsc, oneshot};
 
-use futures::{future::Either, task::{Spawn, SpawnExt}, prelude::*, ready, task, Future, Poll, Sink, Stream};
+use futures::{
+    future::Either,
+    prelude::*,
+    ready, task,
+    task::{Spawn, SpawnExt},
+    Future, Poll, Sink, Stream,
+};
 
 use pin_project::{project, unsafe_project};
 
@@ -199,7 +205,7 @@ pub fn connect(connection_info: ConnectionInfo) -> impl Future<Output = RedisRes
             };
 
             Either::Left(
-                TcpStream::connect(&socket_addr)
+                TcpStream::connect(socket_addr)
                     .err_into()
                     .map_ok(|con| ActualConnection::Tcp(WriteWrapper(BufReader::new(con)))),
             )
